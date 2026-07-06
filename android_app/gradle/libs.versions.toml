@@ -1,0 +1,56 @@
+[versions]
+agp = "8.12.3"
+faceDetection = "16.1.7"
+kotlin = "2.2.21"
+coreKtx = "1.17.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+activity = "1.11.0"
+litert = "1.4.1"
+compose-bom = "2025.11.00"
+compose-material3 = "1.4.0"
+compose-activity = "1.11.0"
+lifecycle-runtime-compose = "2.9.4"
+visionCommon = "17.3.0"
+cameraX = "1.4.0"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+
+# LiteRT dependencies (replaces TensorFlow Lite)
+litert = { module = "com.google.ai.edge.litert:litert", version.ref = "litert" }
+litert-gpu = { module = "com.google.ai.edge.litert:litert-gpu", version.ref = "litert" }
+
+# Compose dependencies
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+
+# Lifecycle dependencies
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-compose" }
+
+# ML Kit dependencies
+face-detection = { module = "com.google.mlkit:face-detection", version.ref = "faceDetection" }
+vision-common = { module = "com.google.mlkit:vision-common", version.ref = "visionCommon" }
+
+# CameraX
+camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraX" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraX" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

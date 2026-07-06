@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Emotion Detection</string>
+
+    <!-- MainScreen strings -->
+    <string name="capture_image">Capture Image</string>
+    <string name="select_from_gallery">Select from Gallery</string>
+    <string name="select_music">Select Music (WAV)</string>
+    <string name="detected_labels_will_appear_here">Detected emotion will appear here</string>
+    <string name="preview_of_the_captured_image">Preview of the captured image</string>
+    <string name="reset">Reset</string>
+    <string name="detected_label">Detected: %1$s</string>
+    <string name="no_emotion_detected">No emotion detected.</string>
+    <string name="processing_image">Processing image…</string>
+    <string name="camera_permission_required">Camera permission is required to use this feature.</string>
+
+    <!-- MainScreen error strings -->
+    <string name="error_accessing_camera">Error accessing camera</string>
+    <string name="error_initializing_recognition">Error initializing emotion recognition</string>
+    <string name="error_optimizing_image">Error optimizing image.</string>
+    <string name="error_processing_image">Error processing image.</string>
+    <string name="image_capture_cancelled">Image capture cancelled.</string>
+    <string name="image_recognition_not_initialized">Emotion recognition not initialized.</string>
+    <string name="no_camera_app_found">No camera app found on the device.</string>
+    <string name="no_image_to_process">No image to process.</string>
+    <string name="unable_to_capture_image">Unable to capture image.</string>
+    <string name="unable_to_select_image">Unable to select image from gallery.</string>
+    <string name="no_gallery_app_found">No gallery app found on the device.</string>
+    <string name="unable_to_select_music">Unable to select music file.</string>
+    <string name="no_audio_app_found">No audio file picker found on the device.</string>
+    <string name="error_playing_music">Error playing music file.</string>
+    
+    <!-- Music playback status -->
+    <string name="music_default">Default</string>
+    <string name="music_generated">Generated</string>
+    <string name="music_status">Music: %1$s - %2$s</string>
+    <string name="music_status_none">Music: Not playing</string>
+</resources>

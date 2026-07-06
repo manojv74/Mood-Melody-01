@@ -1,0 +1,22 @@
+name: audioldm-gpu
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  # --- Core Python & CUDA ---
+  - python=3.11
+  - pip
+  # --- PyTorch & GPU ---
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.4
+  # --- Pip Dependencies ---
+  - pip:
+    - transformers
+    - accelerate
+    - scipy
+    - numpy
+    - requests
+    - huggingface_hub
