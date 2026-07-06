@@ -1,6 +1,0 @@
-What problem it solves
-Why it was introduced
-How it works internally (high level)
-Where it fits in the architecture
-How it compares to technologies you already know (like Flask, MySQL, and your Mood Melody backend)
-Common interview questions and answers
