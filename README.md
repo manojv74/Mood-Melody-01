@@ -1,6 +1,6 @@
 # 🎵 Mood Melody
 
-Mood Melody is an AI-powered music recommendation and generation project that creates music based on a user's facial emotion.
+Mood Melody is an AI-powered music generation project that creates music based on a user's facial emotion.
 
 The idea behind this project is simple: instead of asking users to manually select their mood, the application detects their facial expression, predicts the emotion, and generates music that matches it.
 
