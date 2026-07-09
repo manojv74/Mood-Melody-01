@@ -213,6 +213,3 @@ pip install -r requirements.txt
 
 This project is released under the MIT License — see the `LICENSE` file in the repository root for details.
 
----
-
-If you want, I can now commit this README to the repository (replace the current README). Reply with "Please commit" and I will update README.md on the `main` branch.
