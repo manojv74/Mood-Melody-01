@@ -65,7 +65,7 @@ Mood Melody captures a face image on an Android device, classifies the facial em
 1. Clone the repository and open a terminal:
 
 ```bash
-git clone https://github.com/manojv042/Mood-Melody-.git
+git clone https://github.com/manojv74/Mood-Melody-01.git
 cd Mood-Melody-
 ```
 
