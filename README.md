@@ -54,7 +54,7 @@ Mood Melody captures a face image on an Android device, classifies the facial em
 ## Important project details
 
 - Emotion detector: MobileNetV3-based classifier (trained in PyTorch).
-- Training data: FER2013 / FER2013+ (emotion classes include happy, sad, angry, neutral, fear, surprise, disgust, etc.).
+- Training data: FER2013 / FER2013+ (emotion classes include happy, sad, angry, neutral, fear, surprise, disgust, contempt).
 - Model conversion: trained PyTorch model is converted to TFLite for Android integration.
 - Backend: receives emotion input and uses MusicGen to produce short music clips.
 
