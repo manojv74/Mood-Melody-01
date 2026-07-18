@@ -1,167 +1,156 @@
 # Mood Melody
 
-Mood Melody is an emotion-based music generation system. The Android app detects a user's facial emotion on-device and the Python backend generates a short music clip that matches the detected mood. This README is beginner-friendly and explains what the project is, how it works, and how to run each part locally.
+### Emotion-aware music generation for Android
 
----
+Mood Melody is an end-to-end AI application that detects a user's facial expression on an Android device and generates a short music clip suited to the detected mood. It combines on-device computer vision, a Flask REST API, and Meta's MusicGen model in one mobile-to-backend workflow.
 
-## Project overview
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-Android-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Model%20Training-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Flask](https://img.shields.io/badge/Flask-REST%20API-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Mood Melody captures a face image on an Android device, classifies the facial emotion using a lightweight model (MobileNetV3 converted to TensorFlow Lite), sends the detected emotion to a Flask backend, and the backend generates a short WAV music clip using MusicGen that matches the emotion. The Android app downloads and plays the generated audio.
+## Overview
 
----
+The application uses a MobileNetV3-based classifier trained on FER+ to recognize eight facial-expression classes. The trained model is converted for on-device inference, allowing the Android application to process camera frames locally. The detected mood and confidence are then sent to a Flask backend, which turns them into a music prompt and generates a 10-second WAV clip with `facebook/musicgen-small`.
 
-## Architecture / workflow (simple)
+### Supported expressions
 
-1. Android app captures a face image (CameraX) and runs the TFLite emotion classifier → outputs `mood` + `confidence`.
-2. Android POSTs JSON to the backend `/generate` endpoint with `{ user_id, mood, confidence }`.
-3. Backend composes a prompt (optionally enhanced by an LLM), runs MusicGen to synthesize audio, saves a WAV under `static/music/`, and returns the file URL.
-4. Android downloads and plays the returned audio.
+`Neutral` · `Happiness` · `Surprise` · `Sadness` · `Anger` · `Disgust` · `Fear` · `Contempt`
 
----
+## Key features
 
-## Project structure
+- Continuous facial-expression monitoring with CameraX
+- On-device inference using a mobile-optimized MobileNetV3 model
+- Face detection and tracking with Google ML Kit
+- Confidence-based aggregation to stabilize frame-by-frame predictions
+- Mood-conditioned music generation using MusicGen
+- Flask REST API connecting the Android client to the generation service
+- In-app playback of generated WAV audio, with local-audio selection support
+- Optional Gemini-assisted prompt enhancement with a built-in fallback
 
-- `backend/` — Flask backend server and MusicGen integration (API endpoints).
-- `emotion-detection/` — model training, evaluation, and conversion scripts (PyTorch → ONNX/TF → TFLite).
-- `android_app/` — Android mobile application (Kotlin, Gradle, CameraX, TFLite integration).
-- `README.md`, `LICENSE`, `.gitignore` — top-level repository files.
+## System workflow
 
----
+```mermaid
+flowchart LR
+    A[CameraX input] --> B[ML Kit face detection]
+    B --> C[On-device emotion model]
+    C --> D[Emotion aggregation]
+    D --> E[Flask API]
+    E --> F[MusicGen]
+    F --> G[Audio playback]
+```
 
-## Main features
-
-- Real-time facial emotion detection on Android
-- Emotion classification using a MobileNetV3-based model
-- Music generation using MusicGen based on detected emotion
-- Flask REST API for generation requests
-- Android interface for capture and playback
-- Audio file generation (WAV) and playback in-app
-
----
+1. The Android app captures and analyzes frames from the front camera.
+2. ML Kit locates the face, and the mobile model classifies the expression.
+3. Predictions are aggregated to reduce rapid changes between frames.
+4. The app sends the selected mood and confidence to `POST /generate`.
+5. The backend builds a mood-aware prompt and generates a WAV file.
+6. The generated file URL is returned to the app for playback.
 
 ## Tech stack
 
-- Python, Flask, Flask-CORS
-- PyTorch (training), torchvision
-- TensorFlow Lite (mobile inference)
-- OpenCV (image preprocessing)
-- MusicGen / transformers (audio generation)
-- NumPy, SciPy
-- Android, Kotlin, Gradle
+| Layer | Technologies |
+| --- | --- |
+| Android application | Kotlin, Jetpack Compose, CameraX, Google ML Kit, OkHttp |
+| Mobile inference | LiteRT / TensorFlow Lite |
+| Model development | Python, PyTorch, torchvision, MobileNetV3, OpenCV |
+| Backend | Flask, Flask-CORS |
+| Music generation | Hugging Face Transformers, `facebook/musicgen-small` |
+| Audio processing | NumPy, SciPy |
 
----
+## Repository structure
 
-## Important project details
+```text
+Mood-Melody-01/
+├── android_app/          # Kotlin Android application
+├── backend/              # Flask API and MusicGen integration
+├── emotion-detection/    # Training, evaluation, and model-conversion work
+├── LICENSE
+└── README.md
+```
 
-- Emotion detector: MobileNetV3-based classifier (trained in PyTorch).
-- Training data: FER2013 / FER2013+ (emotion classes include happy, sad, angry, neutral, fear, surprise, disgust, contempt).
-- Model conversion: trained PyTorch model is converted to TFLite for Android integration.
-- Backend: receives emotion input and uses MusicGen to produce short music clips.
+## Getting started
 
----
+### Prerequisites
 
-## Setup — Backend
+- Git
+- Python 3.10 or later
+- Android Studio with JDK 17
+- Android device or emulator running API 28 or later
+- A CUDA-capable GPU is recommended for practical MusicGen inference
 
-1. Clone the repository and open a terminal:
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/manojv74/Mood-Melody-01.git
-cd Mood-Melody-
+cd Mood-Melody-01
 ```
 
-2. Create and activate a Python virtual environment:
+### 2. Run the backend
+
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
-# macOS / Linux
-source .venv/bin/activate
-# Windows (PowerShell)
+```
+
+Windows PowerShell:
+
+```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-3. Install backend dependencies:
+macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Install the backend dependencies and start the server:
 
 ```bash
 pip install -r backend/requirements.txt
-```
-
-4. Run the backend server (example):
-
-```bash
 python backend/music_server.py
 ```
 
-- Default port: `5000`. You can change it with the `PORT` environment variable.
-- Note: MusicGen model weights are large and GPU-intensive. For local development, consider mocking generation or using a smaller model.
+The server runs at `http://localhost:5000` by default. The first launch downloads the MusicGen weights and may take additional time.
 
----
+Optional environment variables:
 
-## Setup — Emotion detection (training & conversion)
-
-1. Change into the folder:
-
-```bash
-cd emotion-detection
+```text
+GEMINI_API_KEY=your_api_key   # Enables prompt enhancement
+PORT=5000                     # Overrides the default port
 ```
 
-2. Create/activate a venv and install dependencies:
+The Gemini key is optional; the backend falls back to its internal prompt builder when the key is unavailable.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+### 3. Run the Android application
 
-3. Training and validation:
+1. Open the `android_app/` directory in Android Studio.
+2. Allow Gradle to sync and download the required dependencies.
+3. In `MainActivity.kt`, set `SERVER_BASE_URL` for your environment:
+   - Android emulator: `http://10.0.2.2:5000`
+   - Physical device: use the development computer's LAN address
+   - Production: use a public HTTPS backend URL
+4. Build and run the application on an emulator or device.
 
-- Review `train_model.py` for dataset path settings (`DATA_DIR`, CSV). The script was developed with Kaggle-style paths — update those constants or pass dataset paths before running locally.
-- Run the training script after preparing FER2013/FER2013+ data:
-
-```bash
-python train_model.py
-```
-
-4. Convert trained model to TFLite (high-level steps):
-
-- Export the trained PyTorch model to ONNX or TorchScript.
-- Convert ONNX → TensorFlow SavedModel (if using ONNX → TF), then SavedModel → TFLite using `tf.lite.TFLiteConverter`.
-- Optionally apply quantization to reduce size and improve performance on-device.
-
-If you want, I can add a conversion helper script that follows your exact training outputs.
-
----
-
-## Setup — Android app (Android Studio)
-
-1. Open Android Studio and select `File → Open` then choose the `android_app/` directory.
-2. Allow Gradle to sync and download dependencies.
-3. Configure the backend base URL in the app's network/Retrofit settings.
-   - For emulator -> host machine: use `http://10.0.2.2:5000`.
-4. Build and run on an emulator or device via Android Studio.
-   - Or from terminal:
+You can also install the debug build from a terminal:
 
 ```bash
 cd android_app
 ./gradlew installDebug
 ```
 
-Note: Android dependencies are managed by Gradle — there is no `requirements.txt` for the Android app.
+On Windows, use `gradlew.bat installDebug`.
 
----
+## API reference
 
-## API flow (end-to-end)
+### Generate music
 
-1. Android app detects emotion: `{ "mood": "happiness", "confidence": 0.92 }`.
-2. Android sends POST request to backend `/generate` with `user_id`, `mood`, `confidence`.
-3. Backend builds a prompt and runs MusicGen to create a WAV file (saved in `static/music/`).
-4. Backend responds with `prompt` and `music_url` JSON fields.
-5. Android downloads the WAV from `music_url` and plays it.
+`POST /generate`
 
----
-
-## Sample API request & response
-
-Request (curl):
+Example request:
 
 ```bash
 curl -X POST http://localhost:5000/generate \
@@ -169,47 +158,54 @@ curl -X POST http://localhost:5000/generate \
   -d '{"user_id":"default","mood":"happiness","confidence":0.92}'
 ```
 
-Response (example):
+Example response:
 
 ```json
 {
-  "prompt": "bright acoustic guitar, upbeat tempo — happy mood",
-  "music_url": "http://localhost:5000/music/music_gen_2026-07-09T12-34-56.wav"
+  "prompt": "upbeat pop, joyful",
+  "music_url": "http://localhost:5000/music/generated_track.wav"
 }
 ```
 
----
+## Model development
 
-## Install requirements (commands)
+The emotion classifier uses a pretrained MobileNetV3-Large backbone with a custom eight-class classification head. Training is configured for 224 × 224 inputs and FER+ labels.
 
-- Backend:
-
-```bash
-pip install -r backend/requirements.txt
-```
-
-- Emotion detection (training):
+To retrain the model:
 
 ```bash
 cd emotion-detection
 pip install -r requirements.txt
+python train_model.py
 ```
 
-- Android: dependencies handled by Gradle (no `requirements.txt`).
+Before running the script locally, update the dataset and output paths in `train_model.py`; the current defaults use Kaggle directories.
 
----
+> Model accuracy is intentionally not stated here because a reproducible evaluation result should be reported only alongside the exact dataset split, preprocessing pipeline, checkpoint, and evaluation script.
 
-## Future improvements (suggested)
+## Current limitations
 
-- Provide a small pre-built TFLite model for quick Android testing.
-- Add a mock or lightweight generator option for CI / development (no GPU required).
-- Make `train_model.py` accept CLI arguments or environment variables instead of hardcoded Kaggle paths.
-- Move generated audio to object storage (e.g., S3) for better serving and scaling.
-- Add unit tests and a simple CI pipeline to run backend smoke tests and linting.
+- MusicGen is compute- and memory-intensive, especially without CUDA.
+- The backend stores generated tracks locally and requires a cleanup or object-storage strategy for production use.
+- The Android server URL is currently configured in source code.
+- Local HTTP is suitable for development; a deployed Android client should communicate over HTTPS.
 
----
+## Future improvements
+
+- Add reproducible model evaluation and publish a classification report and confusion matrix
+- Move server configuration into Android build settings
+- Add backend tests and continuous integration
+- Introduce a lightweight mock generator for development and automated testing
+- Store generated audio in object storage with automatic expiration
+- Add user-selectable musical styles and generation controls
+
+## Author
+
+**Manoj V**
+
+- GitHub: [@manojv74](https://github.com/manojv74)
+- LinkedIn: [linkedin.com/in/manoj-v74](https://www.linkedin.com/in/manoj-v74/)
 
 ## License
 
-This project is released under the MIT License — see the `LICENSE` file in the repository root for details.
-
+This project is licensed under the [MIT License](LICENSE).
