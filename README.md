@@ -1,4 +1,4 @@
-# 🎵 Mood Melody
+# Mood Melody
 
 Mood Melody is an emotion-based music generation system. The Android app detects a user's facial emotion on-device and the Python backend generates a short music clip that matches the detected mood. This README is beginner-friendly and explains what the project is, how it works, and how to run each part locally.
 
